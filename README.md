@@ -4,6 +4,7 @@
 
 ## 搜索栏实现
 
+> 页面点击路由 navigator
 
 ### 自定义搜索栏
 ```
@@ -120,5 +121,135 @@ search.json
     "usingComponents": {
         "searchbar": "/components/searchbar/searchbar"
     }
+}
+```
+
+## 电影模块布局,最后要转成模板
+
+> 注意scroll-view 横向滑动的时候，设置属性 wxss
+
+```
+.module-scroll-view {
+    margin-top: 40rpx;
+    width: 100%;
+    height: 400rpx;
+    /* scroll-view 横向滚动    white-space: nowrap; 子盒子  display: inline-block; */
+    white-space: nowrap;
+}
+
+.module-scroll-view .item-navigator {
+    margin-right: 20rpx;
+    width: 200rpx;
+    display: inline-block;
+}
+```
+### 布局
+```
+
+<!-- index.wxml -->
+<searchbar isNavigator="{{true}}"></searchbar>
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">电影</view>
+    <navigator class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <navigator class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+        </view>
+        <view class="item-title">哥斯拉2：怪兽之王</view>
+      </view>
+    </navigator>
+
+    <navigator class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+        </view>
+        <view class="item-title">哥斯拉2：怪兽之王</view>
+      </view>
+    </navigator>
+
+    <navigator class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+        </view>
+        <view class="item-title">哥斯拉2：怪兽之王</view>
+      </view>
+    </navigator>
+    <navigator class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+        </view>
+        <view class="item-title">哥斯拉2：怪兽之王</view>
+      </view>
+    </navigator>
+  </scroll-view>
+</view>
+
+
+/**index.wxss**/
+
+.module-group {
+    padding: 40rpx;
+    background: white;
+}
+
+.module-group .module-top-group {
+    font-size: 36rpx;
+    display: flex;
+    justify-content: space-between;
+}
+
+.module-top-group .module-title {
+    color: #494949;
+}
+
+.module-top-group .module-more {
+    color: #41be57;
+}
+
+.module-scroll-view {
+    margin-top: 40rpx;
+    width: 100%;
+    height: 400rpx;
+    /* scroll-view 横向滚动    white-space: nowrap; 子盒子  display: inline-block; */
+    white-space: nowrap;
+}
+
+.module-scroll-view .item-navigator {
+    margin-right: 20rpx;
+    width: 200rpx;
+    display: inline-block;
+}
+
+.module-scroll-view .item-navigator:last-of-type {
+    margin-right: 0;
+}
+
+.item-navigator .item-group {
+    width: 100%;
+}
+
+.item-group .thumbnail-group {
+    width: 100%;
+    height: 280rpx;
+}
+
+.thumbnail-group .thumbnail {
+    width: 100%;
+    height: 100%;
+}
+
+.item-group .item-title {
+    font-size: 28rpx;
+    text-align: center;
+    margin-top: 20rpx;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 ```
