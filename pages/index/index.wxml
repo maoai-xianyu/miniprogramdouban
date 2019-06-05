@@ -12,12 +12,7 @@
           <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
         </view>
         <view class="item-title">哥斯拉2：怪兽之王</view>
-        <view class="rate-group">
-          <image wx:for="{{[1,2,3]}}" src="../../images/rate_light.png" />
-          <image src="../../images/rate_half.png" />
-          <image src="../../images/rate_gray.png" />
-          <text>7.5</text>
-        </view>
+        <ratestars rate="8"></ratestars>
       </view>
     </navigator>
     <navigator class="item-navigator">
@@ -26,6 +21,7 @@
           <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
         </view>
         <view class="item-title">哥斯拉2：怪兽之王</view>
+        <ratestars rate="7.5"></ratestars>
       </view>
     </navigator>
     <navigator class="item-navigator">
@@ -34,6 +30,7 @@
           <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
         </view>
         <view class="item-title">哥斯拉2：怪兽之王</view>
+        <ratestars rate="9.5"></ratestars>
       </view>
     </navigator>
     <navigator class="item-navigator">
@@ -42,6 +39,7 @@
           <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
         </view>
         <view class="item-title">哥斯拉2：怪兽之王</view>
+        <ratestars rate="6.5"></ratestars>
       </view>
     </navigator>
   </scroll-view>
