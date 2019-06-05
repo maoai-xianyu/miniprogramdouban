@@ -253,3 +253,30 @@ search.json
     overflow: hidden;
 }
 ```
+
+## 评分星星显示
+
+```
+index.wxml
+<view class="rate-group">
+    <image wx:for="{{[1,2,3]}}" src="../../images/rate_light.png" />
+    <image src="../../images/rate_half.png" />
+    <image src="../../images/rate_gray.png" />
+    <text>7.5</text>
+</view>
+
+index.wxss
+.rate-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20rpx;
+    color: #ccc;
+    margin-top: 20rpx;
+}
+
+.rate-group image {
+    width: 20rpx;
+    height: 20rpx;
+}
+```
