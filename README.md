@@ -392,3 +392,38 @@ Component({
     }
 })
 ```
+
+
+## 接口api
+
+* 电影
+http://video.mtime.com/api/videoSearch/getFilterData
+
+//请求的参数",
+{
+    h: 'movie',
+    y: '全部年代',
+    p: 3,
+    s: 1,
+    i: 1,
+    c: 30
+}
+
+http://video.mtime.com/api/videoSearch/getFilterData?h=movie&y=全部年代&p=3&s=1&i=1&c=30
+
+* 电视剧
+
+http://video.mtime.com/api/videoSearch/getFilterData?h=tv&y=全部年代&p=3&s=1&i=1&c=30
+
+{
+    h: 'tv',
+    y: '全部年代',
+    p: 3,
+    s: 1,
+    i: 1,
+    c: 30
+}
+
+
+* 综艺
+https://movie.douban.com/j/search_subjects?type=tv&tag=综艺&sort=recommend&page_limit=20&page_start=0
