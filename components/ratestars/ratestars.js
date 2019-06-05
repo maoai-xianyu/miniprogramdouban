@@ -41,19 +41,13 @@ Component({
     lifetimes: {
         attached: function() {
             var that = this;
-            console.log('rating stars');
             var rate = that.properties.rate;
-            console.log('rates ' + rate);
             var rateStars = parseInt(rate);
-            console.log('rateStars ' + rateStars);
             var lights = parseInt(rateStars / 2);
-            console.log('lights ' + lights);
             var halfs = rateStars % 2;
-            console.log('halfs ' + halfs);
             var grays = 5 - lights - halfs;
-            console.log('grays ' + grays);
             var rateText = rate && rate > 0 ? rate.toFixed(1) : '未评分';
-
+            console.log('rating stars' + 'rates ' + rate + 'rateStars ' + rateStars + 'lights ' + lights + 'halfs ' + halfs + 'grays ' + grays);
             var lightsArr = [];
             var halfsArr = [];
             var graysArr = [];

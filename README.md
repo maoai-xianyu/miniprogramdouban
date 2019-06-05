@@ -393,37 +393,159 @@ Component({
 })
 ```
 
+## 首页接口用 easy mock 处理的数据
 
-## 接口api
+```
+<!-- index.wxml -->
+<searchbar isNavigator="{{true}}"></searchbar>
+<!-- 电影 -->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">电影</view>
+    <navigator class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <navigator wx:for="{{movies}}" wx:key="{{item.title}}" class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="{{item.cover}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
+      </view>
+    </navigator>
+  </scroll-view>
+</view>
+
+<!-- 电视剧 -->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">电视剧</view>
+    <navigator class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <navigator wx:for="{{tvs}}" wx:key="{{item.title}}" class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="{{item.cover}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
+      </view>
+    </navigator>
+  </scroll-view>
+</view>
+
+<!-- 综艺 -->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">综艺</view>
+    <navigator class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <navigator wx:for="{{shows}}" wx:key="{{item.title}}" class="item-navigator">
+      <view class="item-group">
+        <view class="thumbnail-group">
+          <image class="thumbnail" src="{{item.cover}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
+      </view>
+    </navigator>
+  </scroll-view>
+</view>
+
+
+//index.js
+Page({
+    data: {},
+    onLoad: function(options) {
+        console.log('首页获取数据');
+        var that = this;
+        // 电影
+        wx.request({
+            url: 'https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_movies', //开发者服务器接口地址",
+            // data: '', //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var movies = res.data.subjects;
+                console.log(movies);
+                that.setData({
+                    movies: movies
+                })
+            },
+            fail: () => {
+                console.log('---->首页获取电影数据失败');
+            },
+            complete: () => {
+                console.log('---->首页获取电影数据完成');
+            }
+        });
+
+        // 电视
+        wx.request({
+            url: 'https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_tvs', //开发者服务器接口地址",
+            // data: '', //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var tvs = res.data.subjects;
+                console.log(tvs);
+                that.setData({
+                    tvs: tvs
+                })
+            },
+            fail: () => {
+                console.log('---->首页获取电视数据失败');
+            },
+            complete: () => {
+                console.log('---->首页获取电视数据完成');
+            }
+        });
+
+        // 综艺
+        wx.request({
+            url: 'https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_art', //开发者服务器接口地址",
+            // data: '', //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var shows = res.data.subjects;
+                console.log(shows);
+                that.setData({
+                    shows: shows
+                })
+            },
+            fail: () => {
+                console.log('---->首页获取综艺数据失败');
+            },
+            complete: () => {
+                console.log('---->首页获取综艺数据完成');
+            }
+        });
+    }
+
+})
+```
+
+
+## 接口api  [easy-mock](https://www.easy-mock.com/) 整合数据
+
+> [easy-mock https://www.easy-mock.com/](https://www.easy-mock.com/)
 
 * 电影
-http://video.mtime.com/api/videoSearch/getFilterData
 
-//请求的参数",
-{
-    h: 'movie',
-    y: '全部年代',
-    p: 3,
-    s: 1,
-    i: 1,
-    c: 30
-}
+https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_movies
 
-http://video.mtime.com/api/videoSearch/getFilterData?h=movie&y=全部年代&p=3&s=1&i=1&c=30
 
 * 电视剧
 
-http://video.mtime.com/api/videoSearch/getFilterData?h=tv&y=全部年代&p=3&s=1&i=1&c=30
-
-{
-    h: 'tv',
-    y: '全部年代',
-    p: 3,
-    s: 1,
-    i: 1,
-    c: 30
-}
-
+https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_tvs
 
 * 综艺
-https://movie.douban.com/j/search_subjects?type=tv&tag=综艺&sort=recommend&page_limit=20&page_start=0
+
+https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_art

@@ -1,45 +1,57 @@
 <!-- index.wxml -->
 <searchbar isNavigator="{{true}}"></searchbar>
+<!-- 电影 -->
 <view class="module-group">
   <view class="module-top-group">
     <view class="module-title">电影</view>
     <navigator class="module-more">更多</navigator>
   </view>
   <scroll-view scroll-x="{{true}}" class="module-scroll-view">
-    <navigator class="item-navigator">
+    <navigator wx:for="{{movies}}" wx:key="{{item.title}}" class="item-navigator">
       <view class="item-group">
         <view class="thumbnail-group">
-          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+          <image class="thumbnail" src="{{item.cover}}" />
         </view>
-        <view class="item-title">哥斯拉2：怪兽之王</view>
-        <ratestars rate="8"></ratestars>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
       </view>
     </navigator>
-    <navigator class="item-navigator">
+  </scroll-view>
+</view>
+
+<!-- 电视剧 -->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">电视剧</view>
+    <navigator class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <navigator wx:for="{{tvs}}" wx:key="{{item.title}}" class="item-navigator">
       <view class="item-group">
         <view class="thumbnail-group">
-          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+          <image class="thumbnail" src="{{item.cover}}" />
         </view>
-        <view class="item-title">哥斯拉2：怪兽之王</view>
-        <ratestars rate="7.5"></ratestars>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
       </view>
     </navigator>
-    <navigator class="item-navigator">
+  </scroll-view>
+</view>
+
+<!-- 综艺 -->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">综艺</view>
+    <navigator class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <navigator wx:for="{{shows}}" wx:key="{{item.title}}" class="item-navigator">
       <view class="item-group">
         <view class="thumbnail-group">
-          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
+          <image class="thumbnail" src="{{item.cover}}" />
         </view>
-        <view class="item-title">哥斯拉2：怪兽之王</view>
-        <ratestars rate="9.5"></ratestars>
-      </view>
-    </navigator>
-    <navigator class="item-navigator">
-      <view class="item-group">
-        <view class="thumbnail-group">
-          <image class="thumbnail" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2554370800.webp" />
-        </view>
-        <view class="item-title">哥斯拉2：怪兽之王</view>
-        <ratestars rate="6.5"></ratestars>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
       </view>
     </navigator>
   </scroll-view>
