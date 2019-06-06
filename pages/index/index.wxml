@@ -1,58 +1,8 @@
 <!-- index.wxml -->
 <searchbar isNavigator="{{true}}"></searchbar>
 <!-- 电影 -->
-<view class="module-group">
-  <view class="module-top-group">
-    <view class="module-title">电影</view>
-    <navigator class="module-more">更多</navigator>
-  </view>
-  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
-    <navigator wx:for="{{movies}}" wx:key="{{item.title}}" class="item-navigator">
-      <view class="item-group">
-        <view class="thumbnail-group">
-          <image class="thumbnail" src="{{item.cover}}" />
-        </view>
-        <view class="item-title">{{item.title}}</view>
-        <ratestars rate="{{item.rate}}"></ratestars>
-      </view>
-    </navigator>
-  </scroll-view>
-</view>
-
+<indexmodule title="电影" moreurl="" items="{{movies}}"></indexmodule>
 <!-- 电视剧 -->
-<view class="module-group">
-  <view class="module-top-group">
-    <view class="module-title">电视剧</view>
-    <navigator class="module-more">更多</navigator>
-  </view>
-  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
-    <navigator wx:for="{{tvs}}" wx:key="{{item.title}}" class="item-navigator">
-      <view class="item-group">
-        <view class="thumbnail-group">
-          <image class="thumbnail" src="{{item.cover}}" />
-        </view>
-        <view class="item-title">{{item.title}}</view>
-        <ratestars rate="{{item.rate}}"></ratestars>
-      </view>
-    </navigator>
-  </scroll-view>
-</view>
-
+<indexmodule title="电视剧" moreurl="" items="{{tvs}}"></indexmodule>
 <!-- 综艺 -->
-<view class="module-group">
-  <view class="module-top-group">
-    <view class="module-title">综艺</view>
-    <navigator class="module-more">更多</navigator>
-  </view>
-  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
-    <navigator wx:for="{{shows}}" wx:key="{{item.title}}" class="item-navigator">
-      <view class="item-group">
-        <view class="thumbnail-group">
-          <image class="thumbnail" src="{{item.cover}}" />
-        </view>
-        <view class="item-title">{{item.title}}</view>
-        <ratestars rate="{{item.rate}}"></ratestars>
-      </view>
-    </navigator>
-  </scroll-view>
-</view>
+<indexmodule title="综艺" moreurl="" items="{{shows}}"></indexmodule>
