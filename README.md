@@ -685,6 +685,181 @@ index.json
 ```
 
 
+## MVC
+
+1. model  ---> data
+2. view   ---> wxml wxss
+3. controller ---> 交互 js  index.js 用于控制器，需要将网络请求模块抽离
+
+### 自定义网路模块
+
+> 注意需要将网络模块导出 export { network }
+
+```
+urls.js 用于管理网络请求
+
+// 用的自己的随便搞得数，可以不用这个定义，但是项目中可以这样抽离
+const globalUrls = {
+    moviesList: "https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_movies",
+    tvsList: "https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_tvs",
+    showsList: "https://www.easy-mock.com/mock/5cf7cb2752e9085013407265/douban/search_subjects_art"
+}
+
+export { globalUrls }
+
+
+network.js
+
+import { globalUrls } from "../../utils/urls.js" // 导入
+
+const network = {
+    getMoviesList: function(params) {
+        // 电影 异步
+        wx.request({
+            url: globalUrls.moviesList, //开发者服务器接口地址",
+            // data: '', //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var movies = res.data.subjects;
+                if (params && params.success) {
+                    params.success(movies)
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->首页获取电影数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->首页获取电影数据完成');
+                }
+            }
+        });
+    },
+
+    getTvsList: function(params) {
+        // 电影 异步
+        wx.request({
+            url: globalUrls.tvsList, //开发者服务器接口地址",            // data: '', //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var tvs = res.data.subjects;
+                if (params && params.success) {
+                    params.success(tvs)
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->首页获取电视数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->首页获取电视数据完成');
+                }
+            }
+        });
+    },
+
+    getArtList: function(params) {
+        // 综艺
+        wx.request({
+            url: globalUrls.showsList, //开发者服务器接口地址",
+            // data: '', //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var shows = res.data.subjects;
+                if (params && params.success) {
+                    params.success(shows);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->首页获取综艺数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->首页获取综艺数据完成');
+                }
+            }
+        });
+    }
+
+
+}
+
+// 导出js 方便其他js调用
+export { network }
+```
+
+### 导入自定义网络模块
+> 注意导入方式 import { network } from "network.js"
+
+```
+//index.js
+import { network } from "network.js"
+Page({
+    data: {},
+    onLoad: function(options) {
+        console.log('首页获取数据');
+        var that = this;
+
+        // 电视
+        network.getMoviesList({
+                success: function(movies) {
+                    that.setData({
+                        movies: movies
+                    })
+                },
+                fail: function(msg) {
+                    console.log(msg);
+                },
+                complete: function(msg) {
+                    console.log("首页电影网路回调 " + msg);
+                }
+            }),
+
+            network.getTvsList({
+                success: function(tvs) {
+                    that.setData({
+                        tvs: tvs
+                    })
+                },
+                fail: function(msg) {
+                    console.log(msg);
+                },
+                complete: function(msg) {
+                    console.log("首页电视网路回调 " + msg);
+                },
+            }),
+
+            network.getArtList({
+                success: function(shows) {
+                    that.setData({
+                        shows: shows
+                    })
+                },
+                fail: function(msg) {
+                    console.log(msg);
+                },
+                complete: function(msg) {
+                    console.log("首页电视综艺回调 " + msg);
+                },
+            })
+    }
+})
+```
+
+
+
 ## 接口api  [easy-mock](https://www.easy-mock.com/) 整合数据
 
 > [easy-mock https://www.easy-mock.com/](https://www.easy-mock.com/)
