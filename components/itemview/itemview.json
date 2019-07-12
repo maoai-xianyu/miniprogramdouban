@@ -1,6 +1,6 @@
 {
     "component": true,
     "usingComponents": {
-        "itemview": "/components/itemview/itemview"
+        "ratestars": "/components/ratestars/ratestars"
     }
 }

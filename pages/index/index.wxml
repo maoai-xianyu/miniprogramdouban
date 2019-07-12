@@ -1,8 +1,8 @@
 <!-- index.wxml -->
 <searchbar isNavigator="{{true}}"></searchbar>
 <!-- 电影 -->
-<indexmodule title="电影" moreurl="" items="{{movies}}"></indexmodule>
+<indexmodule title="电影" moreurl="/pages/list/list" items="{{movies}}"></indexmodule>
 <!-- 电视剧 -->
-<indexmodule title="电视剧" moreurl="" items="{{tvs}}"></indexmodule>
+<indexmodule title="电视剧" moreurl="/pages/list/list" items="{{tvs}}"></indexmodule>
 <!-- 综艺 -->
-<indexmodule title="综艺" moreurl="" items="{{shows}}"></indexmodule>
+<indexmodule title="综艺" moreurl="/pages/list/list" items="{{shows}}"></indexmodule>

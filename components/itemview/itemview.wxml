@@ -1,0 +1,10 @@
+<!-- components/itemview/itemview.wxml -->
+<navigator class="item-navigator">
+    <view class="item-group">
+        <view class="thumbnail-group">
+            <image class="thumbnail" src="{{item.cover}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
+    </view>
+</navigator>
