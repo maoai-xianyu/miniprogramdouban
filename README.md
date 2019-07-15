@@ -858,6 +858,185 @@ Page({
 })
 ```
 
+### 首页抽取单个电影封面模块
+
+```
+<!-- components/itemview/itemview.wxml -->
+<navigator class="item-navigator">
+    <view class="item-group">
+        <view class="thumbnail-group">
+            <image class="thumbnail" src="{{item.cover}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rate}}"></ratestars>
+    </view>
+</navigator>
+
+// components/itemview/itemview.js
+Component({
+    /**
+     * 组件的属性列表
+     */
+    properties: {
+        item: {
+            type: Object,
+            value: {}
+        }
+
+    },
+
+    /**
+     * 组件的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 组件的方法列表
+     */
+    methods: {
+
+    }
+})
+
+/* components/itemview/itemview.wxss */
+
+.item-navigator {
+    margin-right: 20rpx;
+    width: 200rpx;
+    display: inline-block;
+}
+
+/* 只有一个 */
+/* .item-navigator:last-of-type {
+    margin-right: 0;
+} */
+
+.item-navigator .item-group {
+    width: 100%;
+}
+
+.item-group .thumbnail-group {
+    width: 100%;
+    height: 280rpx;
+}
+
+.thumbnail-group .thumbnail {
+    width: 100%;
+    height: 100%;
+}
+
+.item-group .item-title {
+    font-size: 28rpx;
+    text-align: center;
+    margin-top: 20rpx;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+{
+    "component": true,
+    "usingComponents": {
+        "ratestars": "/components/ratestars/ratestars"
+    }
+}
+
+```
+
+### indexmodule调用
+
+```
+<!--components/indexmodule/indexmodule.wxml-->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">{{title}}</view>
+    <navigator url="{{moreurl}}" class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <itemview wx:for="{{items}}" wx:key="{{item.title}}" item="{{item}}"></itemview>
+  </scroll-view>
+</view>
+
+indexmodule.json
+{
+    "component": true,
+    "usingComponents": {
+        "itemview": "/components/itemview/itemview"
+    }
+}
+
+/* components/indexmodule/indexmodule.wxss */
+
+.module-group {
+    padding: 40rpx;
+    background: white;
+}
+
+.module-group .module-top-group {
+    font-size: 36rpx;
+    display: flex;
+    justify-content: space-between;
+}
+
+.module-top-group .module-title {
+    color: #494949;
+}
+
+.module-top-group .module-more {
+    color: #41be57;
+}
+
+.module-scroll-view {
+    margin-top: 40rpx;
+    width: 100%;
+    height: 400rpx;
+    /* scroll-view 横向滚动    white-space: nowrap; 子盒子  display: inline-block; */
+    white-space: nowrap;
+}
+
+```
+
+### 更多点击事件 和 页面展示
+
+```
+<!-- index.wxml -->
+<searchbar isNavigator="{{true}}"></searchbar>
+<!-- 电影 -->
+<indexmodule title="电影" moreurl="/pages/list/list" items="{{movies}}"></indexmodule>
+<!-- 电视剧 -->
+<indexmodule title="电视剧" moreurl="/pages/list/list" items="{{tvs}}"></indexmodule>
+<!-- 综艺 -->
+<indexmodule title="综艺" moreurl="/pages/list/list" items="{{shows}}"></indexmodule>
+
+
+<!-- pages/list/list.wxml -->
+<searchbar isNavigator="{{true}}"></searchbar>
+<view class="container_group">
+    <itemview wx:for="{{movies}}" wx:key="{{item.key}}" item="{{item}}"></itemview>
+</view>
+
+list.json
+
+{
+    "usingComponents": {
+        "searchbar": "/components/searchbar/searchbar",
+        "itemview": "/components/itemview/itemview"
+    }
+}
+
+/* pages/list/list.wxss */
+
+.container_group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 30rpx;
+}
+```
+
+
 
 
 ## 接口api  [easy-mock](https://www.easy-mock.com/) 整合数据
