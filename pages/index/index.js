@@ -1,11 +1,10 @@
 //index.js
-import { network } from "network.js"
+import { network } from "../../utils/network.js"
 Page({
     data: {},
     onLoad: function(options) {
         console.log('首页获取数据');
         var that = this;
-
         // 电视
         network.getMoviesList({
             success: function(movies) {

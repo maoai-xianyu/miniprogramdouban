@@ -47,7 +47,7 @@ Component({
             var halfs = rateStars % 2;
             var grays = 5 - lights - halfs;
             var rateText = rate && rate > 0 ? rate.toFixed(1) : '未评分';
-            console.log('rating stars' + 'rates ' + rate + 'rateStars ' + rateStars + 'lights ' + lights + 'halfs ' + halfs + 'grays ' + grays);
+            //console.log('rating stars' + 'rates ' + rate + 'rateStars ' + rateStars + 'lights ' + lights + 'halfs ' + halfs + 'grays ' + grays);
             var lightsArr = [];
             var halfsArr = [];
             var graysArr = [];
