@@ -1,5 +1,5 @@
 <!-- components/itemview/itemview.wxml -->
-<navigator class="item-navigator">
+<navigator wx:if="{{item}}" class="item-navigator">
     <view class="item-group">
         <view class="thumbnail-group">
             <image class="thumbnail" src="{{item.cover.url}}" />
@@ -8,3 +8,4 @@
         <ratestars rate="{{item.rating.value}}"></ratestars>
     </view>
 </navigator>
+<view wx:else class="item-navigator"></view>

@@ -44,6 +44,11 @@ const network = {
             success: res => {
                 console.log(res);
                 var items = res.data.subject_collection_items;
+                // 处理裂表页面显示2个的情况
+                var itemsLength = items.length;
+                if (itemsLength % 3 === 2) {
+                    items.push(null);
+                }
                 if (params && params.success) {
                     params.success(items)
                 }

@@ -998,7 +998,7 @@ indexmodule.json
 
 ```
 
-### 更多点击事件 和 页面展示
+## 更多点击事件 和 页面展示
 
 ```
 <!-- index.wxml -->
@@ -1116,8 +1116,58 @@ Page({
 
 ```
 
+## 列表页面和itemview显示处理
 
+### 列表页面数据取余
+```
+wx.request({
+            url: url, //开发者服务器接口地址",
+            data: {
+                count: count
+            }, //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var items = res.data.subject_collection_items;
+                // 处理裂表页面显示2个的情况
+                var itemsLength = items.length;
+                if (itemsLength % 3 === 2) {
+                    items.push(null);
+                }
+                if (params && params.success) {
+                    params.success(items)
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->首页获取数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->首页获取数据完成');
+                }
+            }
+});
+```
 
+### itemview组件处理null
+
+```
+<!-- components/itemview/itemview.wxml -->
+<navigator wx:if="{{item}}" class="item-navigator">
+    <view class="item-group">
+        <view class="thumbnail-group">
+            <image class="thumbnail" src="{{item.cover.url}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rating.value}}"></ratestars>
+    </view>
+</navigator>
+<view wx:else class="item-navigator"></view>
+
+```
 
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
