@@ -1,0 +1,51 @@
+<!-- pages/detail/detail.wxml -->
+<view class="header-title">
+    <view class="item-title">海王</view>
+    <view class="item-detail">
+        <view class="left-detail">
+            <view class="item-rate">
+                <stars rate="8" starsize="30" fontsize="30" fontcolor="#595959"></stars>
+                <text class="comment-person">234324评价</text>
+            </view>
+            <view class="item-sub-detail">
+                <view class="item-type">143分钟 动作/奇幻/冒险</view>
+                <view class="item-show">2019-07-12(中国大陆) / 2019-07-19(美国)</view>
+                <view class="item-actors">费儒</view>
+            </view>
+        </view>
+        <view class="right-detail">
+            <image class="thumbnail" src="https://img3.doubanio.com/view/photo/m/public/p2559742751.webp" />
+        </view>
+    </view>
+</view>
+<view class="item-tags">
+    <view class="item-tags-title">豆瓣成员常用标签</view>
+    <view class="item-tags-list">
+        <text>黑色幽默</text>
+        <text>小人物</text>
+        <text>喜剧</text>
+        <text>人性</text>
+        <text>方言</text>
+        <text>中国大陆</text>
+        <text>剧情</text>
+    </view>
+</view>
+<view class="comment-list-group">
+    <view class="comment-title">短评(23423423)</view>
+    <view class="comment-group">
+        <view class="left-comment">
+            <image class="avatar" src="https://img3.doubanio.com/icon/u166586138-1.jpg" />
+        </view>
+        <view class="right-comment">
+            <view class="username-rate">
+                <text>摩羯</text>
+                <stars rate="8" starsize="30" isText="{{false}}" ></stars>
+            </view>
+            <view class="release-time">2019-07-12 07:24:07</view>
+            <view class="content">
+                技术确实牛逼，几可乱真。但是，，，真的有必要乱真么，当里面的动物完全变得和真的一样，恐怕也很难用当年动画的规则来接受这部电影了。动画可以是童话，可以造梦，但现实里，狮子和鸟、猪是朋友？狮子靠吃虫子活下来？？？一切都变得怪怪的了。当然，问题远不仅如此。就好像，你无法真正与片中任何一个角色建立情感，因为，整体角色设置都太浮皮潦草了。以及。20年多前觉得经典的故事，简单复刻之后，能否满足现在的观众
+            </view>
+        </view>
+    </view>
+</view>
+<navigator class="more-comment">查看更多短评</navigator>

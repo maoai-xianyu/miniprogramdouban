@@ -48,7 +48,6 @@ Page({
         } else if (type === 'tv') {
             // 请求电视
             network.getTvsList({
-
                 success: function(tvs) {
                     wx.hideLoading();
                     that.setData({

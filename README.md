@@ -1186,6 +1186,298 @@ wx.showLoading({
 wx.hideLoading();
 ```
 
+## 详情页面布局和ratestars 添加是否显示文本
+
+### 详情页面布局 
+```
+<!-- pages/detail/detail.wxml -->
+<view class="header-title">
+    <view class="item-title">海王</view>
+    <view class="item-detail">
+        <view class="left-detail">
+            <view class="item-rate">
+                <stars rate="8" starsize="30" fontsize="30" fontcolor="#595959"></stars>
+                <text class="comment-person">234324评价</text>
+            </view>
+            <view class="item-sub-detail">
+                <view class="item-type">143分钟 动作/奇幻/冒险</view>
+                <view class="item-show">2019-07-12(中国大陆) / 2019-07-19(美国)</view>
+                <view class="item-actors">费儒</view>
+            </view>
+        </view>
+        <view class="right-detail">
+            <image class="thumbnail" src="https://img3.doubanio.com/view/photo/m/public/p2559742751.webp" />
+        </view>
+    </view>
+</view>
+<view class="item-tags">
+    <view class="item-tags-title">豆瓣成员常用标签</view>
+    <view class="item-tags-list">
+        <text>黑色幽默</text>
+        <text>小人物</text>
+        <text>喜剧</text>
+        <text>人性</text>
+        <text>方言</text>
+        <text>中国大陆</text>
+        <text>剧情</text>
+    </view>
+</view>
+<view class="comment-list-group">
+    <view class="comment-title">短评(23423423)</view>
+    <view class="comment-group">
+        <view class="left-comment">
+            <image class="avatar" src="https://img3.doubanio.com/icon/u166586138-1.jpg" />
+        </view>
+        <view class="right-comment">
+            <view class="username-rate">
+                <text>摩羯</text>
+                <stars rate="8" starsize="30" isText="{{false}}" ></stars>
+            </view>
+            <view class="release-time">2019-07-12 07:24:07</view>
+            <view class="content">
+                技术确实牛逼，几可乱真。但是，，，真的有必要乱真么，当里面的动物完全变得和真的一样，恐怕也很难用当年动画的规则来接受这部电影了。动画可以是童话，可以造梦，但现实里，狮子和鸟、猪是朋友？狮子靠吃虫子活下来？？？一切都变得怪怪的了。当然，问题远不仅如此。就好像，你无法真正与片中任何一个角色建立情感，因为，整体角色设置都太浮皮潦草了。以及。20年多前觉得经典的故事，简单复刻之后，能否满足现在的观众
+            </view>
+        </view>
+    </view>
+</view>
+<navigator class="more-comment">查看更多短评</navigator>
+
+
+/* pages/detail/detail.wxss */
+
+.header-title {
+    padding: 60rpx 30rpx;
+}
+
+.header-title .item-title {
+    font-size: 50rpx;
+}
+
+.header-title .item-detail {
+    margin-top: 20rpx;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-detail .left-detail {
+    flex: 1;
+    margin-right: 20rpx;
+}
+
+.left-detail .item-rate {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.item-rate .comment-person {
+    font-size: 28rpx;
+    color: #ccc;
+    margin-left: 20rpx;
+}
+
+.item-detail .right-detail {
+    width: 200rpx;
+    height: 300rpx;
+}
+
+.right-detail image {
+    width: 100%;
+    height: 100%;
+}
+
+.left-detail .item-sub-detail {
+    margin-top: 40rpx;
+    font-size: 32rpx;
+}
+
+.item-sub-detail view {
+    margin-bottom: 10rpx;
+}
+
+.item-tags {
+    padding: 0rpx 30rpx;
+}
+
+.item-tags .item-tags-title {
+    font-size: 32rpx;
+    color: #b3b3b3;
+    margin-bottom: 20rpx;
+}
+
+.item-tags .item-tags-list {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.item-tags-list text {
+    padding: 10rpx 20rpx;
+    background: #f5f5f5;
+    font-size: 32rpx;
+    color: #353535;
+    text-align: center;
+    border-radius: 40rpx;
+    margin-right: 20rpx;
+    margin-bottom: 20rpx;
+}
+
+.comment-list-group {
+    padding: 60rpx 30rpx;
+}
+
+.comment-list-group .comment-title {
+    font-size: 32rpx;
+    color: #b3b3b3;
+}
+
+.comment-list-group .comment-group {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 40rpx;
+}
+
+.comment-group .left-comment {
+    width: 70rpx;
+    height: 70rpx;
+}
+
+.left-comment .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.comment-group .right-comment {
+    margin-left: 20rpx;
+    flex: 1;
+}
+
+.right-comment .username-rate {
+    display: flex;
+    justify-items: flex-start;
+    align-items: center;
+}
+
+.username-rate text {
+    font-size: 36rpx;
+    color: #000000;
+    text-align: start;
+    margin-right: 20rpx;
+}
+
+.right-comment .release-time {
+    font-size: 32rpx;
+    margin-top: 10rpx;
+    color: #b3b3b3;
+}
+
+.right-comment .content {
+    font-size: 32rpx;
+    margin-top: 10rpx;
+    color: #353535;
+}
+
+.more-comment {
+    font-size: 36rpx;
+    text-align: center;
+    color: #41be57;
+    margin-bottom: 40rpx;
+}
+
+```
+
+### ratestars 显示文本
+
+```
+<!-- components/ratestars/ratestars.wxml -->
+<view class="rate-group">
+    <image style="width:{{starsize}}rpx;height:{{starsize}}rpx;" wx:for="{{lights}}" wx:key="*this" src="../../images/rate_light.png" />
+    <image style="width:{{starsize}}rpx;height:{{starsize}}rpx;" wx:for="{{halfs}}" wx:key="*this" src="../../images/rate_half.png" />
+    <image style="width:{{starsize}}rpx;height:{{starsize}}rpx;" wx:for="{{grays}}" wx:key="*this" src="../../images/rate_gray.png" />
+    <text wx:if="{{isText}}" style="font-size:{{fontsize}}rpx;color:{{fontcolor}}">{{rateText}}</text>
+</view>
+
+// components/ratestars/ratestars.js
+Component({
+    /**
+     * 组件的属性列表
+     */
+    properties: {
+        rate: {
+            type: Number,
+            value: 0
+        },
+        starsize: {
+            type: Number,
+            value: 20 //rpx
+        },
+        fontsize: {
+            type: Number,
+            value: 20
+        },
+        fontcolor: {
+            type: String,
+            value: "#ccc"
+        },
+        isText: {
+            type: Boolean,
+            value: true
+        }
+
+    },
+
+    /**
+     * 组件的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 组件的方法列表
+     */
+    methods: {
+
+    },
+
+    // 生命周期
+    lifetimes: {
+        attached: function() {
+            var that = this;
+            var rate = that.properties.rate;
+            var rateStars = parseInt(rate);
+            var lights = parseInt(rateStars / 2);
+            var halfs = rateStars % 2;
+            var grays = 5 - lights - halfs;
+            var rateText = rate && rate > 0 ? rate.toFixed(1) : '未评分';
+            //console.log('rating stars' + 'rates ' + rate + 'rateStars ' + rateStars + 'lights ' + lights + 'halfs ' + halfs + 'grays ' + grays);
+            var lightsArr = [];
+            var halfsArr = [];
+            var graysArr = [];
+            // 获取数组用于显示高亮的星星
+            for (var index = 0; index < lights; index++) {
+                lightsArr.push(index);
+            }
+            // 获取数组用于显示半高亮的星星
+            for (var index = 0; index < halfs; index++) {
+                halfsArr.push(index);
+            }
+            // 获取数组用于显示未高亮的星星
+            for (var index = 0; index < grays; index++) {
+                graysArr.push(index);
+            }
+            that.setData({
+                lights: lightsArr,
+                halfs: halfsArr,
+                grays: graysArr,
+                rateText: rateText
+            });
+        }
+    }
+})
+```
+
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 
