@@ -1169,6 +1169,23 @@ wx.request({
 
 ```
 
+## 添加loading加载
+
+```
+js
+// 显示loading
+wx.showLoading({
+    title: 'Loading...', //提示的内容,
+    mask: true, //显示透明蒙层，防止触摸穿透,
+    success: res => {
+        console.log('loding--' + res);
+        }
+});
+
+// 回调成功后，隐藏
+wx.hideLoading();
+```
+
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 

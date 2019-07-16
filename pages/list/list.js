@@ -14,7 +14,13 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        console.log("获取数据");
+        wx.showLoading({
+            title: 'Loading...', //提示的内容,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+            success: res => {
+                console.log('loding--' + res);
+            }
+        });
         var type = options.type;
         console.log("type----" + type);
         var that = this;
@@ -23,14 +29,17 @@ Page({
             // 请求电影
             network.getMoviesList({
                 success: function(movies) {
+                    wx.hideLoading();
                     that.setData({
                         items: movies
                     })
                 },
                 fail: function(msg) {
+                    wx.hideLoading();
                     console.log(msg);
                 },
                 complete: function(msg) {
+                    wx.hideLoading();
                     console.log("首页电影回调 " + msg);
                 },
                 count: 1000,
@@ -39,15 +48,19 @@ Page({
         } else if (type === 'tv') {
             // 请求电视
             network.getTvsList({
+
                 success: function(tvs) {
+                    wx.hideLoading();
                     that.setData({
                         items: tvs
                     })
                 },
                 fail: function(msg) {
+                    wx.hideLoading();
                     console.log(msg);
                 },
                 complete: function(msg) {
+                    wx.hideLoading();
                     console.log("首页电视网回调 " + msg);
                 },
                 count: 1000,
@@ -57,14 +70,17 @@ Page({
             // 请求综艺
             network.getArtList({
                 success: function(movies) {
+                    wx.hideLoading();
                     that.setData({
                         items: movies
                     })
                 },
                 fail: function(msg) {
+                    wx.hideLoading();
                     console.log(msg);
                 },
                 complete: function(msg) {
+                    wx.hideLoading();
                     console.log("首页综艺回调 " + msg);
                 },
                 count: 1000,
