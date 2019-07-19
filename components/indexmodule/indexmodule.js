@@ -15,8 +15,11 @@ Component({
         items: {
             type: Array,
             value: []
+        },
+        type: {
+            type: String,
+            value: ""
         }
-
     },
 
     /**

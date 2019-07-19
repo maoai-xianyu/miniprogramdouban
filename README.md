@@ -1478,6 +1478,252 @@ Component({
 })
 ```
 
+## 详情页面接口参数传入
+
+### 自定义组件itemview  itemUrl
+```
+<!-- components/itemview/itemview.wxml -->
+<navigator wx:if="{{item}}" class="item-navigator" url="{{itemUrl}}">
+    <view class="item-group">
+        <view class="thumbnail-group">
+            <image class="thumbnail" src="{{item.cover.url}}" />
+        </view>
+        <view class="item-title">{{item.title}}</view>
+        <ratestars rate="{{item.rating.value}}"></ratestars>
+    </view>
+</navigator>
+<view wx:else class="item-navigator"></view>
+
+// components/itemview/itemview.js
+Component({
+    /**
+     * 组件的属性列表
+     */
+    properties: {
+        item: {
+            type: Object,
+            value: {}
+        },
+        itemUrl: {
+            type: String,
+            value: ""
+        }
+
+    },
+
+    /**
+     * 组件的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 组件的方法列表
+     */
+    methods: {
+
+    }
+})
+```
+
+### 自定义组件传入参数 indexmodule  type
+```
+<!-- components/indexmodule/indexmodule.wxml -->
+<view class="module-group">
+  <view class="module-top-group">
+    <view class="module-title">{{title}}</view>
+    <navigator url="{{moreurl}}" class="module-more">更多</navigator>
+  </view>
+  <scroll-view scroll-x="{{true}}" class="module-scroll-view">
+    <itemview wx:for="{{items}}" wx:key="{{item.title}}" item="{{item}}" itemUrl="/pages/detail/detail?type={{type}}&id={{item.id}}"></itemview>
+  </scroll-view>
+</view>
+
+// components/indexmodule/indexmodule.js
+Component({
+    /**
+     * 组件的属性列表
+     */
+    properties: {
+        title: {
+            type: String,
+            value: ""
+        },
+        moreurl: {
+            type: String,
+            value: ""
+        },
+        items: {
+            type: Array,
+            value: []
+        },
+        type: {
+            type: String,
+            value: ""
+        }
+    },
+
+    /**
+     * 组件的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 组件的方法列表
+     */
+    methods: {
+
+    }
+})
+
+```
+
+### 首页调用数据传入参数  type
+
+```
+<!-- index.wxml -->
+<searchbar isNavigator="{{true}}"></searchbar>
+<!-- 电影 -->
+<indexmodule title="电影" moreurl="/pages/list/list?type=movie" items="{{movies}}" type="movie"></indexmodule>
+<!-- 电视剧 -->
+<indexmodule title="电视剧" moreurl="/pages/list/list?type=tv" items="{{tvs}}" type="tv"></indexmodule>
+<!-- 综艺 -->
+<indexmodule title="综艺" moreurl="/pages/list/list?type=show" items="{{shows}}" type="show"></indexmodule>
+```
+
+### 列表页面调用数据传入参数 itemUrl 和 为 type 赋值
+```
+<!-- pages/list/list.wxml -->
+<searchbar isNavigator="{{true}}"></searchbar>
+<view class="container_group">
+    <itemview wx:for="{{items}}" wx:key="{{item.key}}" item="{{item}}" itemUrl="/pages/detail/detail?type={{type}}&id={{item.id}}"></itemview>
+</view>
+
+// pages/list/list.js
+import { network } from "../../utils/network.js"
+
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        var that = this;
+        var type = options.type;
+        console.log("type----" + type);
+        this.setData({
+            type: type
+        });
+        var title = "";
+        wx.showLoading({
+            title: 'Loading...', //提示的内容,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+            success: res => {
+                console.log('loding--' + res);
+            }
+        });
+        if (type === 'movie') {
+            // 请求电影
+            network.getMoviesList({
+                success: function(movies) {
+                    wx.hideLoading();
+                    that.setData({
+                        items: movies
+                    })
+                },
+                fail: function(msg) {
+                    wx.hideLoading();
+                    console.log(msg);
+                },
+                complete: function(msg) {
+                    wx.hideLoading();
+                    console.log("首页电影回调 " + msg);
+                },
+                count: 1000,
+            })
+            title = "电影";
+        } else if (type === 'tv') {
+            // 请求电视
+            network.getTvsList({
+                success: function(tvs) {
+                    wx.hideLoading();
+                    that.setData({
+                        items: tvs
+                    })
+                },
+                fail: function(msg) {
+                    wx.hideLoading();
+                    console.log(msg);
+                },
+                complete: function(msg) {
+                    wx.hideLoading();
+                    console.log("首页电视网回调 " + msg);
+                },
+                count: 1000,
+            })
+            title = "电视";
+        } else {
+            // 请求综艺
+            network.getArtList({
+                success: function(movies) {
+                    wx.hideLoading();
+                    that.setData({
+                        items: movies
+                    })
+                },
+                fail: function(msg) {
+                    wx.hideLoading();
+                    console.log(msg);
+                },
+                complete: function(msg) {
+                    wx.hideLoading();
+                    console.log("首页综艺回调 " + msg);
+                },
+                count: 1000,
+            })
+            title = "综艺";
+        }
+
+        wx.setNavigationBarTitle({ title: title });
+
+    }
+})
+```
+### 详细页面获取传入的参数和值
+```
+// pages/detail/detail.js
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        var type = options.type;
+        var id = options.id;
+        console.log(options);
+    }
+})
+```
+
+
+
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 

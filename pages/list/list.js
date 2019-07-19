@@ -14,6 +14,13 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        var that = this;
+        var type = options.type;
+        console.log("type----" + type);
+        this.setData({
+            type: type
+        });
+        var title = "";
         wx.showLoading({
             title: 'Loading...', //提示的内容,
             mask: true, //显示透明蒙层，防止触摸穿透,
@@ -21,10 +28,6 @@ Page({
                 console.log('loding--' + res);
             }
         });
-        var type = options.type;
-        console.log("type----" + type);
-        var that = this;
-        var title = "";
         if (type === 'movie') {
             // 请求电影
             network.getMoviesList({

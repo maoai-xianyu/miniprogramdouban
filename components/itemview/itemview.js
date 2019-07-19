@@ -7,6 +7,10 @@ Component({
         item: {
             type: Object,
             value: {}
+        },
+        itemUrl: {
+            type: String,
+            value: ""
         }
 
     },
