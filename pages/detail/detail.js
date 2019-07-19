@@ -53,5 +53,22 @@ Page({
                 console.log(msg);
             },
         });
+        // 获取tags标签
+        network.getItemTags({
+            type: type,
+            id: id,
+            success: function(tags) {
+                console.log(tags);
+                that.setData({
+                    tags: tags
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        })
     }
 })

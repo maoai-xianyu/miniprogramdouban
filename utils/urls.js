@@ -8,6 +8,16 @@ const globalUrls = {
     movieDetail: "https://m.douban.com/rexxar/api/v2/movie/",
     tvDetail: "https://m.douban.com/rexxar/api/v2/tv/",
     showDetail: "https://m.douban.com/rexxar/api/v2/tv/",
+    // 详情标签
+    movieTags: function(id) {
+        return "https://m.douban.com/rexxar/api/v2/movie/" + id + "/tags?count=8"
+    },
+    tvTags: function(id) {
+        return "https://m.douban.com/rexxar/api/v2/tv/" + id + "/tags?count=8"
+    },
+    showTags: function(id) {
+        return tvTags(id);
+    }
 }
 
 export { globalUrls }

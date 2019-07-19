@@ -21,13 +21,7 @@
 <view class="item-tags">
     <view class="item-tags-title">豆瓣成员常用标签</view>
     <view class="item-tags-list">
-        <text>黑色幽默</text>
-        <text>小人物</text>
-        <text>喜剧</text>
-        <text>人性</text>
-        <text>方言</text>
-        <text>中国大陆</text>
-        <text>剧情</text>
+        <text wx:for="{{tags}}" wx:key="*this">{{item}}</text>
     </view>
 </view>
 <view class="comment-list-group">

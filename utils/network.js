@@ -101,9 +101,45 @@ const network = {
                 }
             }
         });
+    },
 
-
+    // 获取详情tags
+    getItemTags: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieTags(id);
+        } else if (type === "tv") {
+            url = globalUrls.tvTags(id);
+        } else {
+            url = globalUrls.showTags(id);
+        }
+        console.log("tags url " + url)
+        wx.request({
+            url: url,
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var tags = res.data.tags;
+                    params.success(tags);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页tags失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.complete('---->获取详细页tags完成');
+                }
+            }
+        });
     }
+
 }
 
 // 导出js 方便其他js调用
