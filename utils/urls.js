@@ -17,7 +17,17 @@ const globalUrls = {
     },
     showTags: function(id) {
         return tvTags(id);
-    }
+    },
+    // 详情评论
+    movieComments: function(id, start = 0, count = 3) {
+        return "https://m.douban.com/rexxar/api/v2/movie/" + id + "/interests?count=" + count + "&start=" + start;
+    },
+    tvComments: function(id, start = 0, count = 3) {
+        return "https://m.douban.com/rexxar/api/v2/tv/" + id + "/interests?count=" + count + "&start=" + start;
+    },
+    showComments: function(id, start = 0, count = 3) {
+        return this.tvComments(id, start, count);
+    },
 }
 
 export { globalUrls }

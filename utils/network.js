@@ -138,6 +138,44 @@ const network = {
                 }
             }
         });
+    },
+    // 获取详情页面的评论
+    getItemComments: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var start = params.start ? params.start : 0;
+        var count = params.count ? params.count : 3;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieComments(id, start, count);
+        } else if (type === "tv") {
+            url = globalUrls.tvComments(id, start, count);
+        } else {
+            url = globalUrls.showComments(id, start, count);
+        }
+        console.log("comments url " + url)
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var comments = res.data;
+                    params.success(comments);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页commemts失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页commemts完成');
+                }
+            }
+        });
     }
 
 }

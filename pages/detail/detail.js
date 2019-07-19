@@ -21,7 +21,9 @@ Page({
             type: type,
             id: id,
             success: function(item) {
+                console.log("------header------begin");
                 console.log(item);
+                console.log("------header------end");
                 var geners = item.genres;
                 // ['1','2','3'].join = 1/2/3
                 geners = geners.join('/');
@@ -58,7 +60,9 @@ Page({
             type: type,
             id: id,
             success: function(tags) {
+                console.log("------tags------begin");
                 console.log(tags);
+                console.log("------tags------end");
                 that.setData({
                     tags: tags
                 });
@@ -69,6 +73,28 @@ Page({
             complete: function(msg) {
                 console.log(msg);
             },
-        })
+        });
+        // 获取comments
+        network.getItemComments({
+            type: type,
+            id: id,
+            success: function(data) {
+                console.log("------comments------begin");
+                console.log(data);
+                console.log("------comments------end");
+                var commentsTotal = data.total;
+                var comments = data.interests;
+                that.setData({
+                    comments: comments,
+                    commentsTotal: commentsTotal
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        });
     }
 })

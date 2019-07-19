@@ -2241,6 +2241,353 @@ Page({
 </view>
 ```
 
+## 详细页面显示评价
+
+### 评价接口定义
+```
+// 用的自己的随便搞得数，可以不用这个定义，但是项目中可以这样抽离
+const globalUrls = {
+    // 首页
+    movieList: "https://m.douban.com/rexxar/api/v2/subject_collection/movie_showing/items",
+    tvList: "https://m.douban.com/rexxar/api/v2/subject_collection/tv_hot/items",
+    showList: "https://m.douban.com/rexxar/api/v2/subject_collection/tv_variety_show/items",
+    // 详情
+    movieDetail: "https://m.douban.com/rexxar/api/v2/movie/",
+    tvDetail: "https://m.douban.com/rexxar/api/v2/tv/",
+    showDetail: "https://m.douban.com/rexxar/api/v2/tv/",
+    // 详情标签
+    movieTags: function(id) {
+        return "https://m.douban.com/rexxar/api/v2/movie/" + id + "/tags?count=8"
+    },
+    tvTags: function(id) {
+        return "https://m.douban.com/rexxar/api/v2/tv/" + id + "/tags?count=8"
+    },
+    showTags: function(id) {
+        return tvTags(id);
+    },
+    // 详情评论
+    movieComments: function(id, start = 0, count = 3) {
+        return "https://m.douban.com/rexxar/api/v2/movie/" + id + "/interests?count=" + count + "&start=" + start;
+    },
+    tvComments: function(id, start = 0, count = 3) {
+        return "https://m.douban.com/rexxar/api/v2/tv/" + id + "/interests?count=" + count + "&start=" + start;
+    },
+    showComments: function(id, start = 0, count = 3) {
+        return this.tvComments(id, start, count);
+    },
+}
+
+export { globalUrls }
+```
+### 评价接口调用
+```
+import { globalUrls } from "urls.js"
+
+const network = {
+    getMoviesList: function(params) {
+        console.log('---->首页获取电影数据');
+        params.type = 'movie'
+        this.getItemList(params);
+    },
+
+    getTvsList: function(params) {
+        params.type = 'tv'
+        this.getItemList(params);
+    },
+
+    getArtList: function(params) {
+        params.type = 'shows'
+        this.getItemList(params);
+    },
+
+    getItemList: function(params) {
+        var url = "";
+        var type = params.type;
+        if (type === 'movie') {
+            // 请求电影
+            url = globalUrls.movieList;
+        } else if (type === 'tv') {
+            // 请求电视
+            url = globalUrls.tvList;
+        } else {
+            // 请求综艺
+            url = globalUrls.showList;
+        }
+        var count = params.count ? params.count : 7;
+
+        console.log("getItemList url " + url + "--count  " + count);
+
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            data: {
+                count: count
+            }, //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var items = res.data.subject_collection_items;
+                // 处理裂表页面显示2个的情况
+                var itemsLength = items.length;
+                if (itemsLength % 3 === 2) {
+                    items.push(null);
+                }
+                if (params && params.success) {
+                    params.success(items)
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->首页获取数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->首页获取数据完成');
+                }
+            }
+        });
+    },
+
+    //获取详细数据
+    getItemDetail: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieDetail + id;
+        } else if (type === "tv") {
+            url = globalUrls.tvDetail + id;
+        } else {
+            url = globalUrls.showDetail + id;
+        }
+        console.log("getItemDetail url " + url);
+        wx.request({
+            url: url,
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                if (params && params.success) {
+                    var item = res.data;
+                    params.success(item);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->获取详细页数据完成');
+                }
+            }
+        });
+    },
+
+    // 获取详情tags
+    getItemTags: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieTags(id);
+        } else if (type === "tv") {
+            url = globalUrls.tvTags(id);
+        } else {
+            url = globalUrls.showTags(id);
+        }
+        console.log("tags url " + url)
+        wx.request({
+            url: url,
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var tags = res.data.tags;
+                    params.success(tags);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页tags失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.complete('---->获取详细页tags完成');
+                }
+            }
+        });
+    },
+    // 获取详情页面的评论
+    getItemComments: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var start = params.start ? params.start : 0;
+        var count = params.count ? params.count : 3;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieComments(id, start, count);
+        } else if (type === "tv") {
+            url = globalUrls.tvComments(id, start, count);
+        } else {
+            url = globalUrls.showComments(id, start, count);
+        }
+        console.log("comments url " + url)
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var comments = res.data;
+                    params.success(comments);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页commemts失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页commemts完成');
+                }
+            }
+        });
+    }
+
+}
+
+// 导出js 方便其他js调用
+export { network }
+```
+### 详情页面接口调用
+```
+// pages/detail/detail.js
+import { network } from "../../utils/network.js"
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        console.log(options);
+        var that = this;
+        var type = options.type;
+        var id = options.id;
+        network.getItemDetail({
+            type: type,
+            id: id,
+            success: function(item) {
+                console.log("------header------begin");
+                console.log(item);
+                console.log("------header------end");
+                var geners = item.genres;
+                // ['1','2','3'].join = 1/2/3
+                geners = geners.join('/');
+                item.geners = geners;
+                // 获取演员
+                var actors = item.actors;
+                var actorsNames = [];
+                if (actors.length > 3) {
+                    actors = actors.slice(0, 3);
+                }
+                actors.forEach(actor => {
+                    actorsNames.push(actor.name)
+                });
+                actorsNames = actorsNames.join('/');
+
+                //获取导演
+                var director = item.directors[0].name;
+                var authors = director + "(导演) /" + actorsNames;
+                item.authors = authors;
+                that.setData({
+                    item: item
+                })
+
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        });
+        // 获取tags标签
+        network.getItemTags({
+            type: type,
+            id: id,
+            success: function(tags) {
+                console.log("------tags------begin");
+                console.log(tags);
+                console.log("------tags------end");
+                that.setData({
+                    tags: tags
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        });
+        // 获取comments
+        network.getItemComments({
+            type: type,
+            id: id,
+            success: function(data) {
+                console.log("------comments------begin");
+                console.log(data);
+                console.log("------comments------end");
+                var commentsTotal = data.total;
+                var comments = data.interests;
+                that.setData({
+                    comments: comments,
+                    commentsTotal: commentsTotal
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        });
+    }
+})
+<-- 显示 -->
+<view class="comment-list-group">
+    <view class="comment-title">短评({{commentsTotal}})</view>
+    <view class="comment-group" wx:for="{{comments}}" wx:key="{{item.id}}">
+        <view class="left-comment">
+            <image class="avatar" src="{{item.user.avatar}}" />
+        </view>
+        <view class="right-comment">
+            <view class="username-rate">
+                <text>{{item.user.name}}</text>
+                <stars rate="{{item.rating.value*2}}" starsize="30" isText="{{false}}"></stars>
+            </view>
+            <view class="release-time">{{item.create_time}}</view>
+            <view class="content">
+                {{item.comment}}
+            </view>
+        </view>
+    </view>
+</view>
+```
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 
