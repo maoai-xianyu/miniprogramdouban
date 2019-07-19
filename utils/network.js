@@ -32,7 +32,7 @@ const network = {
         }
         var count = params.count ? params.count : 7;
 
-        console.log("count----" + count);
+        console.log("getItemList url " + url + "--count  " + count);
 
         wx.request({
             url: url, //开发者服务器接口地址",
@@ -64,6 +64,45 @@ const network = {
                 }
             }
         });
+    },
+
+    //获取详细数据
+    getItemDetail: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieDetail + id;
+        } else if (type === "tv") {
+            url = globalUrls.tvDetail + id;
+        } else {
+            url = globalUrls.showDetail + id;
+        }
+        console.log("getItemDetail url " + url);
+        wx.request({
+            url: url,
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                if (params && params.success) {
+                    var item = res.data;
+                    params.success(item);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->获取详细页数据完成');
+                }
+            }
+        });
+
+
     }
 }
 
