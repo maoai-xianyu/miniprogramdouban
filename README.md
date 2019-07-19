@@ -1893,6 +1893,92 @@ Page({
 })
 ```
 
+## 详细页面显示头部信息
+
+### 获取数据
+```
+// pages/detail/detail.js
+import { network } from "../../utils/network.js"
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        console.log(options);
+        var that = this;
+        var type = options.type;
+        var id = options.id;
+        network.getItemDetail({
+            type: type,
+            id: id,
+            success: function(item) {
+                console.log(item);
+                var geners = item.genres;
+                // ['1','2','3'].join = 1/2/3
+                geners = geners.join('/');
+                item.geners = geners;
+                // 获取演员
+                var actors = item.actors;
+                var actorsNames = [];
+                if (actors.length > 3) {
+                    actors = actors.slice(0, 3);
+                }
+                actors.forEach(actor => {
+                    actorsNames.push(actor.name)
+                });
+                actorsNames = actorsNames.join('/');
+
+                //获取导演
+                var director = item.directors[0].name;
+                var authors = director + "(导演) /" + actorsNames;
+                item.authors = authors;
+                that.setData({
+                    item: item
+                })
+
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        });
+    }
+})
+```
+### 页面显示
+```
+<!-- pages/detail/detail.wxml -->
+<view class="header-title">
+    <view class="item-title">{{item.title}} {{item.original_title}}({{item.year}})</view>
+    <view class="item-detail">
+        <view class="left-detail">
+            <view class="item-rate">
+                <stars rate="8" starsize="30" fontsize="30" fontcolor="#595959"></stars>
+                <text class="comment-person">{{item.rating.count}}评价</text>
+            </view>
+            <view class="item-sub-detail">
+                <view class="item-type">{{item.durations[0]}} {{item.geners}}</view>
+                <view class="item-show">{{item.pubdate[0]}}上映 {{item.countries[0]}}</view>
+                <view class="item-actors">{{item.authors}}</view>
+            </view>
+        </view>
+        <view class="right-detail">
+            <image class="thumbnail" src="{{item.cover.image.small.url}}" />
+        </view>
+    </view>
+</view>
+```
+
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 

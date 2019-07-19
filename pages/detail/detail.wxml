@@ -1,20 +1,20 @@
 <!-- pages/detail/detail.wxml -->
 <view class="header-title">
-    <view class="item-title">海王</view>
+    <view class="item-title">{{item.title}} {{item.original_title}}({{item.year}})</view>
     <view class="item-detail">
         <view class="left-detail">
             <view class="item-rate">
                 <stars rate="8" starsize="30" fontsize="30" fontcolor="#595959"></stars>
-                <text class="comment-person">234324评价</text>
+                <text class="comment-person">{{item.rating.count}}评价</text>
             </view>
             <view class="item-sub-detail">
-                <view class="item-type">143分钟 动作/奇幻/冒险</view>
-                <view class="item-show">2019-07-12(中国大陆) / 2019-07-19(美国)</view>
-                <view class="item-actors">费儒</view>
+                <view class="item-type">{{item.durations[0]}} {{item.geners}}</view>
+                <view class="item-show">{{item.pubdate[0]}}上映 {{item.countries[0]}}</view>
+                <view class="item-actors">{{item.authors}}</view>
             </view>
         </view>
         <view class="right-detail">
-            <image class="thumbnail" src="https://img3.doubanio.com/view/photo/m/public/p2559742751.webp" />
+            <image class="thumbnail" src="{{item.cover.image.small.url}}" />
         </view>
     </view>
 </view>
@@ -31,7 +31,7 @@
     </view>
 </view>
 <view class="comment-list-group">
-    <view class="comment-title">短评(23423423)</view>
+    <view class="comment-title">短评({{item.comment_count}})</view>
     <view class="comment-group">
         <view class="left-comment">
             <image class="avatar" src="https://img3.doubanio.com/icon/u166586138-1.jpg" />
@@ -39,7 +39,7 @@
         <view class="right-comment">
             <view class="username-rate">
                 <text>摩羯</text>
-                <stars rate="8" starsize="30" isText="{{false}}" ></stars>
+                <stars rate="8" starsize="30" isText="{{false}}"></stars>
             </view>
             <view class="release-time">2019-07-12 07:24:07</view>
             <view class="content">
