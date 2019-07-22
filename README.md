@@ -2602,7 +2602,7 @@ Page({
     </view>
 </view>
 ```
-### 获取数据和返回
+### 获取数据和返回上级页面
 ```
 //Page Object
 Page({
@@ -2633,6 +2633,245 @@ Page({
         });
     }
 });
+```
+### 页面跳转
+```
+<!-- pages/detail/detail.wxml -->
+<navigator class="more-comment" url="/pages/comment/comment?id={{id}}&type={{type}}&thumbnail={{item.cover.image.small.url}}&title={{item.title}}&rate={{item.rating.value}}">查看更多短评</navigator>
+```
+
+## 显示更多评价
+
+### 抽离组件
+
+```
+<!-- components/commentitem/commentitem.wxml -->
+<view class="comment-group">
+    <view class="left-comment">
+        <image class="avatar" src="{{item.user.avatar}}" />
+    </view>
+    <view class="right-comment">
+        <view class="username-rate">
+            <text>{{item.user.name}}</text>
+            <stars rate="{{item.rating.value*2}}" starsize="30" isText="{{false}}"></stars>
+        </view>
+        <view class="release-time">{{item.create_time}}</view>
+        <view class="content">{{item.comment}}</view>
+    </view>
+</view>
+
+/* components/commentitem/commentitem.wxss */
+
+.comment-group {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 40rpx;
+}
+
+.comment-group .left-comment {
+    width: 70rpx;
+    height: 70rpx;
+}
+
+.left-comment .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.comment-group .right-comment {
+    margin-left: 20rpx;
+    flex: 1;
+}
+
+.right-comment .username-rate {
+    display: flex;
+    justify-items: flex-start;
+    align-items: center;
+}
+
+.username-rate text {
+    font-size: 36rpx;
+    color: #000000;
+    text-align: start;
+    margin-right: 20rpx;
+}
+
+.right-comment .release-time {
+    font-size: 32rpx;
+    margin-top: 10rpx;
+    color: #b3b3b3;
+}
+
+.right-comment .content {
+    font-size: 32rpx;
+    margin-top: 10rpx;
+    color: #353535;
+}
+
+
+// components/commentitem/commentitem.js
+Component({
+    /**
+     * 组件的属性列表
+     */
+    properties: {
+
+        item: {
+            type: Object,
+            value: {}
+        }
+
+    },
+
+    /**
+     * 组件的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 组件的方法列表
+     */
+    methods: {
+
+    }
+})
+
+commentitem.json
+{
+    "usingComponents": {
+        "commentitem": "/components/commentitem/commentitem"
+    }
+}
+```
+
+### 详细页面调用
+```
+<view class="comment-list-group">
+    <view class="comment-title">短评({{commentsTotal}})</view>
+    <commentitem wx:for="{{comments}}" item="{{item}}"></commentitem>
+</view>
+
+{
+    "usingComponents": {
+        "stars": "/components/ratestars/ratestars",
+        "commentitem": "/components/commentitem/commentitem"
+    }
+}
+```
+
+### 更多评论页面显示
+
+```
+<!-- pages/comment/comment.wxml -->
+<view class="container-group">
+    <view class="item-header" bind:tap="onItemTapEvent">
+        <image class="item-thumbnail" src="{{thumbnail}}" />
+        <text class="item-title">{{title}}</text>
+        <text class="item-rate">{{rate}}分</text>
+    </view>
+    <view class="comment-title">全部影评({{commentsTotal}})</view>
+    <commentitem wx:for="{{comments}}" item="{{item}}"></commentitem>
+</view>
+
+/* pages/comment.wxss */
+
+.container-group {
+    padding: 20rpx 30rpx;
+}
+
+.container-group .item-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.item-header .item-thumbnail {
+    width: 40rpx;
+    height: 60rpx;
+}
+
+.item-header .item-title {
+    color: #41be57;
+    font-size: 32rpx;
+    margin-left: 20rpx;
+}
+
+.item-header .item-rate {
+    color: #d3d3d3;
+    font-size: 28rpx;
+    margin-left: 10rpx;
+}
+
+.container-group .comment-title {
+    font-size: 40rpx;
+    margin-top: 60rpx;
+}
+
+//Page Object
+import { network } from "../../utils/network.js"
+
+Page({
+    data: {
+        commentsTotal: 0
+    },
+    onLoad: function(options) {
+        console.log(options);
+        var that = this;
+        var id = options.id;
+        var type = options.type;
+        var thumbnail = options.thumbnail;
+        var title = options.title;
+        var rate = options.rate;
+        that.setData({
+            thumbnail: thumbnail,
+            title: title,
+            rate: rate
+        });
+
+        // 获取comments
+        network.getItemComments({
+            type: type,
+            id: id,
+            start: 1,
+            count: 20,
+            success: function(data) {
+                console.log("------comments------begin");
+                console.log(data);
+                console.log("------comments------end");
+                var commentsTotal = data.total;
+                var comments = data.interests;
+                that.setData({
+                    comments: comments,
+                    commentsTotal: commentsTotal
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
+        });
+
+    },
+
+    // 返回上级页面
+    onItemTapEvent: function(event) {
+        wx.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
+    }
+});
+
+{
+    "usingComponents": {
+        "commentitem": "/components/commentitem/commentitem"
+    }
+}
+
 ```
 
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题

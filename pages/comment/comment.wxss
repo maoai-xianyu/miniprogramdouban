@@ -26,3 +26,8 @@
     font-size: 28rpx;
     margin-left: 10rpx;
 }
+
+.container-group .comment-title {
+    font-size: 40rpx;
+    margin-top: 60rpx;
+}

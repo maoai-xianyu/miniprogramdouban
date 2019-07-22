@@ -5,20 +5,6 @@
         <text class="item-title">{{title}}</text>
         <text class="item-rate">{{rate}}分</text>
     </view>
-</view>
-<view class="comment-list-group">
     <view class="comment-title">全部影评({{commentsTotal}})</view>
-    <view class="comment-group" wx:for="{{comments}}" wx:key="{{item.id}}">
-        <view class="left-comment">
-            <image class="avatar" src="{{item.user.avatar}}" />
-        </view>
-        <view class="right-comment">
-            <view class="username-rate">
-                <text>{{item.user.name}}</text>
-                <stars rate="{{item.rating.value*2}}" starsize="30" isText="{{false}}"></stars>
-            </view>
-            <view class="release-time">{{item.create_time}}</view>
-            <view class="content">{{item.comment}}</view>
-        </view>
-    </view>
+    <commentitem wx:for="{{comments}}" item="{{item}}"></commentitem>
 </view>

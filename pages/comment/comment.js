@@ -1,9 +1,10 @@
 //Page Object
+import { network } from "../../utils/network.js"
+
 Page({
     data: {
-
+        commentsTotal: 0
     },
-    //options(Object)
     onLoad: function(options) {
         console.log(options);
         var that = this;
@@ -16,6 +17,31 @@ Page({
             thumbnail: thumbnail,
             title: title,
             rate: rate
+        });
+
+        // 获取comments
+        network.getItemComments({
+            type: type,
+            id: id,
+            start: 1,
+            count: 20,
+            success: function(data) {
+                console.log("------comments------begin");
+                console.log(data);
+                console.log("------comments------end");
+                var commentsTotal = data.total;
+                var comments = data.interests;
+                that.setData({
+                    comments: comments,
+                    commentsTotal: commentsTotal
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            complete: function(msg) {
+                console.log(msg);
+            },
         });
 
     },
