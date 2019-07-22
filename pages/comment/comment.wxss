@@ -1,0 +1,28 @@
+/* pages/comment.wxss */
+
+.container-group {
+    padding: 20rpx 30rpx;
+}
+
+.container-group .item-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.item-header .item-thumbnail {
+    width: 40rpx;
+    height: 60rpx;
+}
+
+.item-header .item-title {
+    color: #41be57;
+    font-size: 32rpx;
+    margin-left: 20rpx;
+}
+
+.item-header .item-rate {
+    color: #d3d3d3;
+    font-size: 28rpx;
+    margin-left: 10rpx;
+}

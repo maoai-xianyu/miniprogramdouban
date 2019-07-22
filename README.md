@@ -2589,6 +2589,52 @@ Page({
 </view>
 ```
 
+## 显示更多评价
+
+### 定义页面
+```
+<!-- pages/comment/comment.wxml -->
+<view class="container-group">
+    <view class="item-header" bind:tap="onItemTapEvent">
+        <image class="item-thumbnail" src="{{thumbnail}}" />
+        <text class="item-title">{{title}}</text>
+        <text class="item-rate">{{rate}}分</text>
+    </view>
+</view>
+```
+### 获取数据和返回
+```
+//Page Object
+Page({
+    data: {
+
+    },
+    //options(Object)
+    onLoad: function(options) {
+        console.log(options);
+        var that = this;
+        var id = options.id;
+        var type = options.type;
+        var thumbnail = options.thumbnail;
+        var title = options.title;
+        var rate = options.rate;
+        that.setData({
+            thumbnail: thumbnail,
+            title: title,
+            rate: rate
+        });
+
+    },
+
+    // 返回上级页面
+    onItemTapEvent: function(event) {
+        wx.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
+    }
+});
+```
+
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 
 ## 接口api  [easy-mock](https://www.easy-mock.com/) 整合数据

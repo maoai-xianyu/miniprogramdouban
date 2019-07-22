@@ -17,6 +17,10 @@ Page({
         var that = this;
         var type = options.type;
         var id = options.id;
+        that.setData({
+            id: id,
+            type: type
+        });
         network.getItemDetail({
             type: type,
             id: id,
@@ -95,6 +99,13 @@ Page({
             complete: function(msg) {
                 console.log(msg);
             },
+        });
+    },
+    // 页面展示
+    onShow: function() {
+        wx.pageScrollTo({
+            scrollTop: 0, //滚动到页面的目标位置（单位px）,
+            duration: 300 //滚动动画的时长，默认300ms，单位 ms,
         });
     }
 })

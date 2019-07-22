@@ -42,4 +42,4 @@
         </view>
     </view>
 </view>
-<navigator class="more-comment">查看更多短评</navigator>
+<navigator class="more-comment" url="/pages/comment/comment?id={{id}}&type={{type}}&thumbnail={{item.cover.image.small.url}}&title={{item.title}}&rate={{item.rating.value}}">查看更多短评</navigator>
