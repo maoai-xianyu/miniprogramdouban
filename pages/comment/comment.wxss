@@ -31,3 +31,20 @@
     font-size: 40rpx;
     margin-top: 60rpx;
 }
+
+.page-btn-group {
+    margin-top: 40rpx;
+    margin-bottom: 40rpx;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+}
+
+.page-btn-group .page-btn {
+    height: 60rpx;
+    line-height: 60rpx;
+    text-align: center;
+    border-color: #898989;
+    color: #898989;
+    flex: 1;
+}
