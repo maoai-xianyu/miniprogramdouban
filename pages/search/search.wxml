@@ -1,7 +1,14 @@
 <!-- pages/search/search.wxml -->
 <searchbar bind:searchinput="onSearchItem"></searchbar>
+<view class="history-list-group" wx:if="{{histories && !subjects}}">
+    <view class="history-title">
+        <view class="title">历史记录</view>
+        <view class="clear" bind:tap="onClearEvent">清除</view>
+    </view>
+    <navigator wx:for="{{histories}}" wx:key="{{item.id}}" class="history-group">{{item.title}}</navigator>
+</view>
 <view class="item-list-group">
-    <view class="item-grup" bindtap="onItemTapEvent" wx:for="{{subjects}}" wx:key="{{item.id}}" data-id="{{item.id}}">
+    <view class="item-grup" bindtap="onItemTapEvent" wx:for="{{subjects}}" wx:key="{{item.id}}" data-title="{{item.title}}" data-id="{{item.id}}">
         <image class="thumbnail" src="{{item.pic.normal}}" />
         <view class="info-group">
             <view class="title">{{item.title}}</view>

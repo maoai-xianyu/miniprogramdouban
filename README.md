@@ -3409,6 +3409,213 @@ Page({
 })
 ```
 
+## 搜索页面添加历史(本地存储)和优化
+
+### 搜索页面添加历史
+```
+<!-- pages/search/search.wxml -->
+<searchbar bind:searchinput="onSearchItem"></searchbar>
+<view class="history-list-group" wx:if="{{histories && !subjects}}">
+    <view class="history-title">
+        <view class="title">历史记录</view>
+        <view class="clear" bind:tap="onClearEvent">清除</view>
+    </view>
+    <navigator wx:for="{{histories}}" wx:key="{{item.id}}" class="history-group">{{item.title}}</navigator>
+</view>
+<view class="item-list-group">
+    <view class="item-grup" bindtap="onItemTapEvent" wx:for="{{subjects}}" wx:key="{{item.id}}" data-title="{{item.title}}" data-id="{{item.id}}">
+        <image class="thumbnail" src="{{item.pic.normal}}" />
+        <view class="info-group">
+            <view class="title">{{item.title}}</view>
+            <view class="rate-year">{{item.rating.value}}分/{{item.year}}</view>
+        </view>
+    </view>
+</view>
+
+/* pages/search/search.wxss */
+
+.history-list-group {
+    padding: 10rpx 20rpx;
+}
+
+.history-list-group .history-title {
+    display: flex;
+    padding: 10rpx 0rpx;
+    justify-content: space-between;
+    background: #f9f9f9;
+    font-size: 28rpx;
+    color: #9e9e9e;
+}
+
+.history-list-group .history-group {
+    font-size: 32rpx;
+    padding: 20rpx 0rpx;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.item-list-group {
+    padding: 10rpx 20rpx;
+}
+
+.item-list-group .item-grup {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10rpx 0rpx;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.item-grup .thumbnail {
+    width: 80rpx;
+    height: 100rpx;
+    margin-right: 20rpx;
+}
+
+.item-grup .info-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.item-grup .title {
+    font-size: 32rpx;
+}
+
+.item-grup .rate-year {
+    font-size: 28rpx;
+    columns: #7b7b7b;
+}
+```
+
+### 搜索页面本地保存数据和获取本地数据
+
+1. wx.getStorage  获取
+2. wx.setStorage  保存
+
+-> 详细情况官方文档
+```
+// pages/search/search.js
+import { network } from "../../utils/network.js"
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        var that = this;
+        wx.getStorage({
+            key: 'searched',
+            success: (res) => {
+                console.log(res.data);
+                console.log("读取数据成功");
+                var histories = res.data;
+                that.setData({
+                    histories: histories
+                });
+            },
+            fail: () => {
+                console.log("读取本地数据是失败");
+            },
+            complete: () => {}
+        })
+
+    },
+
+    onSearchItem: function(event) {
+        console.log("搜索页面");
+        console.log(event);
+        var that = this;
+        var value = event.detail.value;
+        if (!value || value === "") {
+            that.setData({
+                subjects: null
+            });
+            return;
+        }
+        network.getSearch({
+            q: value,
+            success: function(subjects) {
+                that.setData({
+                    subjects: subjects
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            completet: function(msg) {
+                console.log(msg);
+            }
+
+        });
+    },
+    // js代码控制，没有用页面上navigater组件，因为navigater没有办法记住用户点击的是那个item,通过js可以处理不同的
+    // 业务逻辑
+    onItemTapEvent: function(event) {
+        console.log(event);
+        var that = this;
+        var id = event.currentTarget.dataset.id;
+        var title = event.currentTarget.dataset.title;
+        var histories = that.data.histories;
+        var isExisted = false;
+        // histories 有值得话，进行循环操作
+        if (histories) {
+            for (var index = 0; index <= histories.length; index++) {
+                var item = histories[index];
+                if (item.id === id) {
+                    isExisted = true;
+                    break;
+                }
+            }
+        }
+        if (!isExisted) {
+            // 赋值
+            if (!histories) {
+                histories = []
+            }
+            histories.push({
+                id: id,
+                title: title
+            });
+            wx.setStorage({
+                key: 'searched',
+                // 可以存放数据，此处存放集合
+                data: histories,
+                success: function() {
+                    console.log("保存数据成功");
+                },
+                fail: () => {
+                    console.log("保存数据失败");
+                },
+                complete: () => {
+                    console.log("保存数据complete");
+                },
+
+            });
+        }
+        wx.navigateTo({ url: '/pages/detail/detail?type=movie&id=' + id });
+    },
+
+    onClearEvent: function(event) {
+        wx.removeStorage({
+            key: 'searched',
+            success: res => {
+                console.log("删除成功");
+            }
+        });
+        this.setData({
+            histories: null
+        })
+    }
+})
+```
+
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 
 ## 接口api  [easy-mock](https://www.easy-mock.com/) 整合数据
