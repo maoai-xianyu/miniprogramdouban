@@ -2991,6 +2991,12 @@ Page({
 ## 搜索页面
 
 ### 搜索框组件添加input事件，注意 bindinput 和 bind:input 事件的区别
+
+-> 是原生组件和非原生组件的关系 
+
+1. https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/event.html
+2. https://developers.weixin.qq.com/miniprogram/dev/component/native-component.html
+
 ```
 <!-- components/searchbar/searchbar.wxml -->
 <view class="searchbar">
