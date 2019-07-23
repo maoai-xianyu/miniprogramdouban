@@ -2988,6 +2988,421 @@ Page({
 });
 ```
 
+## 搜索页面
+
+### 搜索框组件添加input事件，注意 bindinput 和 bind:input 事件的区别
+```
+<!-- components/searchbar/searchbar.wxml -->
+<view class="searchbar">
+    <navigator wx:if="{{isNavigator}}" url="/pages/search/search" class="search-navigator"></navigator>
+    <view wx:else class="search-input-group">
+        <input class='search-input' bindinput="onInputEvent" placeholder="搜索" placeholder-class="search-input-placeholder" />
+        <!-- <input class='search-input' bind:input="onInputEvent" placeholder="搜索" placeholder-class="search-input-placeholder" /> -->
+    </view>
+</view>
+
+
+// components/searchbar/searchbar.js
+Component({
+    /**
+     * 组件的属性列表
+     */
+    properties: {
+        isNavigator: {
+            type: Boolean,
+            vales: false
+        }
+    },
+
+    /**
+     * 组件的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 组件的方法列表
+     */
+    methods: {
+        onInputEvent: function(event) {
+            var value = event.detail.value;
+            var detail = {
+                "value": value
+            };
+            var options = {};
+            // 传递事件
+            this.triggerEvent("searchinput", detail, options);
+        }
+    }
+})
+
+```
+
+### 搜索页面定义接口
+```
+// 用的自己的随便搞得数，可以不用这个定义，但是项目中可以这样抽离
+const globalUrls = {
+    // 首页
+    movieList: "https://m.douban.com/rexxar/api/v2/subject_collection/movie_showing/items",
+    tvList: "https://m.douban.com/rexxar/api/v2/subject_collection/tv_hot/items",
+    showList: "https://m.douban.com/rexxar/api/v2/subject_collection/tv_variety_show/items",
+    // 详情
+    movieDetail: "https://m.douban.com/rexxar/api/v2/movie/",
+    tvDetail: "https://m.douban.com/rexxar/api/v2/tv/",
+    showDetail: "https://m.douban.com/rexxar/api/v2/tv/",
+    // 详情标签
+    movieTags: function(id) {
+        return "https://m.douban.com/rexxar/api/v2/movie/" + id + "/tags?count=8"
+    },
+    tvTags: function(id) {
+        return "https://m.douban.com/rexxar/api/v2/tv/" + id + "/tags?count=8"
+    },
+    showTags: function(id) {
+        return tvTags(id);
+    },
+    // 详情评论
+    movieComments: function(id, start = 0, count = 3) {
+        return "https://m.douban.com/rexxar/api/v2/movie/" + id + "/interests?count=" + count + "&start=" + start;
+    },
+    tvComments: function(id, start = 0, count = 3) {
+        return "https://m.douban.com/rexxar/api/v2/tv/" + id + "/interests?count=" + count + "&start=" + start;
+    },
+    showComments: function(id, start = 0, count = 3) {
+        return this.tvComments(id, start, count);
+    },
+    // 搜索
+    searchUrl: function(q) {
+        return "https://m.douban.com/rexxar/api/v2/search?type=movie&q=" + q
+    }
+}
+
+export { globalUrls }
+```
+
+### 搜索接口调用
+
+```
+import { globalUrls } from "urls.js"
+
+const network = {
+    getMoviesList: function(params) {
+        console.log('---->首页获取电影数据');
+        params.type = 'movie'
+        this.getItemList(params);
+    },
+
+    getTvsList: function(params) {
+        params.type = 'tv'
+        this.getItemList(params);
+    },
+
+    getArtList: function(params) {
+        params.type = 'shows'
+        this.getItemList(params);
+    },
+
+    getItemList: function(params) {
+        var url = "";
+        var type = params.type;
+        if (type === 'movie') {
+            // 请求电影
+            url = globalUrls.movieList;
+        } else if (type === 'tv') {
+            // 请求电视
+            url = globalUrls.tvList;
+        } else {
+            // 请求综艺
+            url = globalUrls.showList;
+        }
+        var count = params.count ? params.count : 7;
+
+        console.log("getItemList url " + url + "--count  " + count);
+
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            data: {
+                count: count
+            }, //请求的参数",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                var items = res.data.subject_collection_items;
+                // 处理裂表页面显示2个的情况
+                var itemsLength = items.length;
+                if (itemsLength % 3 === 2) {
+                    items.push(null);
+                }
+                if (params && params.success) {
+                    params.success(items)
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->首页获取数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->首页获取数据完成');
+                }
+            }
+        });
+    },
+
+    //获取详细数据
+    getItemDetail: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieDetail + id;
+        } else if (type === "tv") {
+            url = globalUrls.tvDetail + id;
+        } else {
+            url = globalUrls.showDetail + id;
+        }
+        console.log("getItemDetail url " + url);
+        wx.request({
+            url: url,
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                console.log(res);
+                if (params && params.success) {
+                    var item = res.data;
+                    params.success(item);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.complete) {
+                    params.complete('---->获取详细页数据完成');
+                }
+            }
+        });
+    },
+
+    // 获取详情tags
+    getItemTags: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieTags(id);
+        } else if (type === "tv") {
+            url = globalUrls.tvTags(id);
+        } else {
+            url = globalUrls.showTags(id);
+        }
+        console.log("tags url " + url)
+        wx.request({
+            url: url,
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var tags = res.data.tags;
+                    params.success(tags);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页tags失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.complete('---->获取详细页tags完成');
+                }
+            }
+        });
+    },
+    // 获取详情页面的评论
+    getItemComments: function(params) {
+        var type = params.type;
+        var id = params.id;
+        var start = params.start ? params.start : 0;
+        var count = params.count ? params.count : 3;
+        var url = "";
+        if (type === "movie") {
+            url = globalUrls.movieComments(id, start, count);
+        } else if (type === "tv") {
+            url = globalUrls.tvComments(id, start, count);
+        } else {
+            url = globalUrls.showComments(id, start, count);
+        }
+        console.log("comments url " + url)
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var comments = res.data;
+                    params.success(comments);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页commemts失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取详细页commemts完成');
+                }
+            }
+        });
+    },
+
+    // 搜索数据
+    getSearch: function(params) {
+        var q = params.q;
+        var url = globalUrls.searchUrl(q);
+        console.log("getSearch url " + url);
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var subjects = res.data.subjects;
+                    params.success(subjects);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取搜索数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取搜索数据完成');
+                }
+            }
+        });
+    }
+
+}
+
+// 导出js 方便其他js调用
+export { network }
+```
+
+### 搜索页面调用 
+
+1. 注意 bindtap  和 bind:tap 的区别,
+2. 注意 navigater 组件 和 js 控制的页面跳转
+
+-> bindtap  和 bind:tap 有时候 bind:tap 替换不了bindtap
+```
+
+<!-- pages/search/search.wxml -->
+<searchbar bind:searchinput="onSearchItem"></searchbar>
+<view class="item-list-group">
+    <view class="item-grup" bindtap="onItemTapEvent" wx:for="{{subjects}}" wx:key="{{item.id}}" data-id="{{item.id}}">
+        <image class="thumbnail" src="{{item.pic.normal}}" />
+        <view class="info-group">
+            <view class="title">{{item.title}}</view>
+            <view class="rate-year">{{item.rating.value}}分/{{item.year}}</view>
+        </view>
+    </view>
+</view>
+
+/* pages/search/search.wxss */
+
+.item-list-group {
+    padding: 10rpx 20rpx;
+}
+
+.item-list-group .item-grup {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10rpx 0rpx;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.item-grup .thumbnail {
+    width: 80rpx;
+    height: 100rpx;
+    margin-right: 20rpx;
+}
+
+.item-grup .info-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.item-grup .title {
+    font-size: 32rpx;
+}
+
+.item-grup .rate-year {
+    font-size: 28rpx;
+    columns: #7b7b7b;
+}
+
+
+// pages/search/search.js
+import { network } from "../../utils/network.js"
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+
+    },
+
+    onSearchItem: function(event) {
+        console.log("搜索页面");
+        console.log(event);
+        var that = this;
+        var q = event.detail.value;
+        network.getSearch({
+            q: q,
+            success: function(subjects) {
+                that.setData({
+                    subjects: subjects
+                });
+            },
+            fail: function(msg) {
+                console.log(msg);
+            },
+            completet: function(msg) {
+                console.log(msg);
+            }
+
+        });
+    },
+    // js代码控制，没有用页面上navigater组件，因为navigater没有办法记住用户点击的是那个item,通过js可以处理不同的
+    // 业务逻辑
+    onItemTapEvent: function(event) {
+        console.log(event);
+        var id = event.currentTarget.dataset.id;
+        wx.navigateTo({ url: '/pages/detail/detail?type=movie&id=' + id });
+    }
+})
+```
+
 ## 接口修改，可以用微信小程序的豆瓣的接口，但是在网页中请求不到数据，应该是跨域的问题
 
 ## 接口api  [easy-mock](https://www.easy-mock.com/) 整合数据

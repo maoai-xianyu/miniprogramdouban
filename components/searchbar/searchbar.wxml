@@ -2,6 +2,7 @@
 <view class="searchbar">
     <navigator wx:if="{{isNavigator}}" url="/pages/search/search" class="search-navigator"></navigator>
     <view wx:else class="search-input-group">
-        <input class='search-input' placeholder="搜索" placeholder-class="search-input-placeholder" />
+        <input class='search-input' bindinput="onInputEvent" placeholder="搜索" placeholder-class="search-input-placeholder" />
+        <!-- <input class='search-input' bind:input="onInputEvent" placeholder="搜索" placeholder-class="search-input-placeholder" /> -->
     </view>
 </view>

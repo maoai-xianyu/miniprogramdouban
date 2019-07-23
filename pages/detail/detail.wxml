@@ -26,6 +26,6 @@
 </view>
 <view class="comment-list-group">
     <view class="comment-title">短评({{commentsTotal}})</view>
-    <commentitem wx:for="{{comments}}" item="{{item}}"></commentitem>
+    <commentitem wx:for="{{comments}}" item="{{item}}" wx:key="{{item.id}}"></commentitem>
 </view>
 <navigator class="more-comment" url="/pages/comment/comment?id={{id}}&type={{type}}&thumbnail={{item.cover.image.small.url}}&title={{item.title}}&rate={{item.rating.value}}">查看更多短评</navigator>

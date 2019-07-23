@@ -11,6 +11,11 @@ Page({
         console.log(options);
         var that = this;
         that.setData(options);
+        wx.showLoading({
+            title: 'Loading...', //提示的内容,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+            success: res => {}
+        });
         that.getCommemts(1);
     },
 
@@ -49,6 +54,7 @@ Page({
                     scrollTop: 0, //滚动到页面的目标位置（单位px）,
                     duration: 300 //滚动动画的时长，默认300ms，单位 ms,
                 });
+                wx.hideLoading();
             },
             fail: function(msg) {
                 console.log(msg);
@@ -56,6 +62,7 @@ Page({
                     preLoading: false,
                     nextLoading: false,
                 });
+                wx.hideLoading();
             },
             complete: function(msg) {
                 console.log(msg);

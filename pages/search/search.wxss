@@ -1,1 +1,34 @@
 /* pages/search/search.wxss */
+
+.item-list-group {
+    padding: 10rpx 20rpx;
+}
+
+.item-list-group .item-grup {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10rpx 0rpx;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.item-grup .thumbnail {
+    width: 80rpx;
+    height: 100rpx;
+    margin-right: 20rpx;
+}
+
+.item-grup .info-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.item-grup .title {
+    font-size: 32rpx;
+}
+
+.item-grup .rate-year {
+    font-size: 28rpx;
+    columns: #7b7b7b;
+}

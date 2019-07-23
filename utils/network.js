@@ -176,6 +176,35 @@ const network = {
                 }
             }
         });
+    },
+
+    // 搜索数据
+    getSearch: function(params) {
+        var q = params.q;
+        var url = globalUrls.searchUrl(q);
+        console.log("getSearch url " + url);
+        wx.request({
+            url: url, //开发者服务器接口地址",
+            method: 'GET',
+            dataType: 'json', //如果设为json，会尝试对返回的数据做一次 JSON.parse
+            success: res => {
+                if (params && params.success) {
+                    console.log(res);
+                    var subjects = res.data.subjects;
+                    params.success(subjects);
+                }
+            },
+            fail: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取搜索数据失败');
+                }
+            },
+            complete: () => {
+                if (params && params.fail) {
+                    params.fail('---->获取搜索数据完成');
+                }
+            }
+        });
     }
 
 }
