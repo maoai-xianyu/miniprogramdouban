@@ -6,7 +6,11 @@ Component({
     properties: {
         rate: {
             type: Number,
-            value: 0
+            value: 0,
+            observer: function(newVal, oldVal) {
+                // 属性值变化时执行
+                this.updateRate();
+            }
         },
         starsize: {
             type: Number,
@@ -38,12 +42,7 @@ Component({
      * 组件的方法列表
      */
     methods: {
-
-    },
-
-    // 生命周期
-    lifetimes: {
-        attached: function() {
+        updateRate: function() {
             var that = this;
             var rate = that.properties.rate;
             var rateStars = parseInt(rate);
@@ -73,6 +72,15 @@ Component({
                 grays: graysArr,
                 rateText: rateText
             });
+        }
+
+    },
+
+    // 生命周期
+    lifetimes: {
+        //  在组件实例进入页面节点树时执行
+        attached: function() {
+            this.updateRate();
         }
     }
 })
